@@ -1,0 +1,11 @@
+{
+  "name": "chatsphere",
+  "version": "1.0.0",
+  "description": "ChatSphere Full Stack Chat App",
+  "scripts": {
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm start",
+    "start": "cd server && npm start"
+  }
+}
