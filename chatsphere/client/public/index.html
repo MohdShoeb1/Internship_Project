@@ -9,6 +9,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>ChatSphere</title>
+    <script>
+      // Must be FIRST — before any JS bundle loads
+      if (typeof window.process === 'undefined') {
+        window.process = {
+          env: { NODE_ENV: 'development', REACT_APP_API_URL: 'http://localhost:5000/api', REACT_APP_SOCKET_URL: 'http://localhost:5000' },
+          browser: true,
+          version: 'v16.0.0',
+          versions: {},
+          nextTick: function(fn, ...args) { Promise.resolve().then(() => fn(...args)); },
+          stdout: { write: function() {} },
+          stderr: { write: function() {} },
+          argv: [],
+          platform: 'browser',
+          hrtime: function() { return [0, 0]; }
+        };
+      }
+      window.global = window.global || window;
+      window.Buffer = window.Buffer || { isBuffer: function() { return false; } };
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

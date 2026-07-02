@@ -27,8 +27,8 @@ function AppInner() {
     <SocketProvider token={token}>
       <Routes>
         <Route path="/login" element={<PublicRoute><AuthPage /></PublicRoute>} />
-        <Route path="/" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/"      element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+        <Route path="*"      element={<Navigate to="/" replace />} />
       </Routes>
       <ToastContainer position="bottom-right" theme="dark" autoClose={3000} />
     </SocketProvider>
@@ -37,7 +37,7 @@ function AppInner() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <AppInner />
       </AuthProvider>

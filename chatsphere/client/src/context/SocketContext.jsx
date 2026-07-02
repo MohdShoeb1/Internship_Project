@@ -1,46 +1,51 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
 
 const SocketContext = createContext(null);
 
+const SOCKET_URL = 'http://localhost:5000';
+
 export const SocketProvider = ({ children, token }) => {
-  const socketRef = useRef(null);
+  const [socket, setSocket]       = useState(null);
   const [connected, setConnected] = useState(false);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     if (!token) return;
 
-    const socket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000', {
+    const s = io(SOCKET_URL, {
       auth: { token },
-      transports: ['websocket'],
+      transports: ['websocket', 'polling'],
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     });
 
-    socketRef.current = socket;
+    socketRef.current = s;
+    setSocket(s);
 
-    socket.on('connect', () => {
-      console.log('✅ Socket connected');
+    s.on('connect', () => {
       setConnected(true);
+      console.log('✅ Socket connected');
     });
 
-    socket.on('disconnect', () => {
-      console.log('❌ Socket disconnected');
+    s.on('disconnect', () => {
       setConnected(false);
     });
 
-    socket.on('connect_error', (err) => {
+    s.on('connect_error', (err) => {
       console.error('Socket error:', err.message);
     });
 
     return () => {
-      socket.disconnect();
+      s.disconnect();
       socketRef.current = null;
+      setSocket(null);
+      setConnected(false);
     };
   }, [token]);
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef.current, connected }}>
+    <SocketContext.Provider value={{ socket, connected }}>
       {children}
     </SocketContext.Provider>
   );
